@@ -6,8 +6,8 @@
 //  Licence: BSD (see attached LICENCE.txt file).
 //
 
-API_PATH = "http://api.twitter.com/1/";
-//API_PATH = "http://identi.ca/api/";
+//API_PATH = "http://api.twitter.com/1/";
+API_PATH = "http://identi.ca/api/";
 
 function Twittia(action) {
 	this.max_length = 100;
@@ -252,7 +252,7 @@ Twittia.prototype.getNewData = function(supress_new_with_timeout) {
 /*
 Twittia.prototype.sendNewTweet = function(tweet, in_reply_to_status_id) {
 	
-	var url = "http://api.twitter.com/1/statuses/update.json";
+	var url = API_PATH + "statuses/update.json";
 	var data = "source=twittia&status=" + OAuth.percentEncode(tweet);
 	if(in_reply_to_status_id != '') data += "&in_reply_to_status_id=" + in_reply_to_status_id
 		

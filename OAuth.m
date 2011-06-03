@@ -27,7 +27,7 @@
 }
 
 -(id)init {
-	if (self = [super init]) {
+	if ((self = [super init])) {
 		self.consumerToken = [[OAToken alloc] initWithKey:OAUTH_CONSUMER_KEY secret:OAUTH_CONSUMER_SECRET];
 		self.accessToken = [[OAToken alloc] initWithUserDefaultsUsingServiceProviderName:OAUTH_SERVICE_NAME prefix:APP_NAME];
 		consumer = [[OAConsumer alloc] initWithKey:OAUTH_CONSUMER_KEY secret:OAUTH_CONSUMER_SECRET];
@@ -59,8 +59,10 @@
 														  signatureProvider:nil]; // use the default method, HMAC-SHA1
 	
 	[request setHTTPMethod:@"POST"];
+    [request setOAuthParameterName:@"oauth_callback" withValue:@"oob"];
 	
 	OADataFetcher *fetcher = [[OADataFetcher alloc] init];
+    NSLog(@"%@", request);
 	
 	[fetcher fetchDataWithRequest:request
 						 delegate:self
@@ -69,6 +71,7 @@
 }
 
 - (void)requestTokenTicket:(OAServiceTicket *)ticket didFinishWithData:(NSData *)data {
+    NSLog(@"succ: %i %@", ticket.didSucceed, ticket.response);
 	if (ticket.didSucceed) {
 		NSString *responseBody = [[NSString alloc] initWithData:data
 													   encoding:NSUTF8StringEncoding];
@@ -76,6 +79,7 @@
 				
 		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?oauth_token=%@", OAUTH_USER_AUTHORIZATION_URL, requestToken.key]];
 		[[NSWorkspace sharedWorkspace] openURL:url];
+        
 	}
 }
 
@@ -134,7 +138,7 @@
 	
 	NSLog(@"%@ %@", tweet, statusId);
 	
-	NSURL *url = [NSURL URLWithString:@"http://api.twitter.com/1/statuses/update.json"];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@statuses/update.json", API_URL]];
 	OAMutableURLRequest *request = [[OAMutableURLRequest alloc] initWithURL:url
 																   consumer:consumer
 																	  token:accessToken
